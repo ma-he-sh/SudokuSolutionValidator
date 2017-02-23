@@ -44,6 +44,7 @@ int main(){
 			}
 		}
 	}
+	fclose(fp);
 
 	//print the sudoku matix
 	for (int i=0; i<HEIGHT; i++){
