@@ -29,7 +29,7 @@ int main(){
 
 	FILE *fp;
 	char *mode = "r";
-	int num[HEIGHT];
+	int num[HEIGHT][WIDTH];
 
 	fp = fopen(FILE_NAME, mode);
 
@@ -38,13 +38,19 @@ int main(){
 		exit(1);
 	}
 	else{
-		for(int i=0; i < HEIGHT; i++){
-			fscanf(fp, "%d", &num[i]);
+		for(int col=0; col < HEIGHT; col++){
+			for(int row=0; row < WIDTH; row++){
+				fscanf(fp, "%d", &num[col][row]);
+			}
 		}
 	}
 
-
-	for (int i=0; i < HEIGHT; i++){
-		printf("%d\n", num[i]);
+	//print the sudoku matix
+	for (int i=0; i<HEIGHT; i++){
+		for(int j=0; j<WIDTH; j++){
+			printf("%d ", num[i][j]);
+		}
+		printf("\n");
 	}
+
 }
