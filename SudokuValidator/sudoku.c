@@ -1,7 +1,6 @@
 
 /*
 Idea of sudoku:
-
 No column or row can have repeating numbers 
 The numbers should go from 1-9
 */
@@ -24,11 +23,17 @@ The numbers should go from 1-9
 
 #define IGNORE 0
 
-struct validate{
+typedef struct{
 	int ROW;
 	int COL;
 	int (*matrix)[WIDTH];
-};
+} validate;
+
+void *checkRows(void *value);
+
+void *checkCols(void *value);
+
+void *checkMatrix(void *value);
 
 
 //open the file 
@@ -54,7 +59,7 @@ int main(){
 	fclose(fp);
 
 	//display sudoku matrix
-	printf("CURRENTLY SOLVING --");
+	printf("CURRENTLY SOLVING --\n");
 	//print the sudoku matix
 	for (int i=0; i<HEIGHT; i++){
 		for(int j=0; j<WIDTH; j++){
@@ -123,72 +128,116 @@ int main(){
 	check9->COL = 6;
 	check9->matrix = matrix;
 
-	void * checkrow, * checkcol, 
-		 * sq3x3_1, * sq3x3_2, * sq3x3_3, 
-		 * sq3x3_4, * sq3x3_5, * sq3x3_6,
-		 * sq3x3_7, * sq3x3_8, * sq3x3_9;
-
 	pthread_t t_row, t_col, 
-			  t_check1, t_check2, t_check_3, 
-			  t_check4, t_check5, t_check_6,
-			  t_check7, t_chech8, t_check_9;
-
+			  t_check1, t_check2, t_check3, 
+			  t_check4, t_check5, t_check6,
+			  t_check7, t_check8, t_check9;
 	
+	//Result pointers
+	void *res_rows, *res_cols,
+			  *res_m1, *res_m2, *res_m3, *res_m4,
+			  *res_m5, *res_m6, *res_m7, *res_m8,
+			  *res_m9;
 
-	//create the pthreads
-	//pthread_create(t_row, NULL, checkRows, )
+	//Start the threads
+	pthread_create(&t_row, NULL, checkRows, (void *)check0);
+	pthread_create(&t_col, NULL, checkCols, (void *)check0);
+	pthread_create(&t_check1, NULL, checkMatrix, (void *)check1);
+	pthread_create(&t_check2, NULL, checkMatrix, (void *)check2);
+	pthread_create(&t_check3, NULL, checkMatrix, (void *)check3);
+	pthread_create(&t_check4, NULL, checkMatrix, (void *)check4);
+	pthread_create(&t_check5, NULL, checkMatrix, (void *)check5);
+	pthread_create(&t_check6, NULL, checkMatrix, (void *)check6);
+	pthread_create(&t_check7, NULL, checkMatrix, (void *)check7);
+	pthread_create(&t_check8, NULL, checkMatrix, (void *)check8);
+	pthread_create(&t_check9, NULL, checkMatrix, (void *)check9);
+	
+	//Wait for the threads
+	pthread_join(t_row, &res_rows);
+	pthread_join(t_col, &res_cols);
+	pthread_join(t_check1, &res_m1);
+	pthread_join(t_check2, &res_m2);
+	pthread_join(t_check3, &res_m3);
+	pthread_join(t_check4, &res_m4);
+	pthread_join(t_check5, &res_m5);
+	pthread_join(t_check6, &res_m6);
+	pthread_join(t_check7, &res_m7);
+	pthread_join(t_check8, &res_m8);
+	pthread_join(t_check9, &res_m9);
+
+	//Check all the threads passed
+	printf("Validation finished.\n");
+	if((int)res_rows == 1 && (int)res_cols == 1 &&
+		(int)res_m1 == 1 && (int)res_m2 == 1 && (int)res_m3 == 1 &&
+		(int)res_m4 == 1 && (int)res_m5 == 1 && (int)res_m6 == 1 &&
+		(int)res_m7 == 1 && (int)res_m8 == 1 && (int)res_m9 == 1){
+		printf("The puzzle is solved.\n");
+	}
+	else {
+		printf("The puzzle is not solved.\n");
+	}
 }
 
+
 //check rows for 1-9
-void checkRows(int data[][]){
+void *checkRows(void *value){
+	validate *mtrix = (validate *)value;
+	int s_row = mtrix->ROW;
+	int s_col = mtrix->COL;
 	for (int i=s_row; i < HEIGHT; i++){
 		int row[10] = {0};
 
 		for(int j = s_col; j < WIDTH; j++){
-			int cell = data[i][j];
+			int cell = mtrix->matrix[i][j];
 			if(row[cell] != 0){
-				return 0;
+				return (void *)0;
 			}
 			else{
 				row[cell] = 1;
 			}
 		} 
 	}
-	return 1;
+	return (void *)1;
 }
 
 //check columns for 1-9
-void checkCols(int data[][]){
+void *checkCols(void *value){
+	validate *mtrix = (validate *)value;
+	int s_row = mtrix->ROW;
+	int s_col = mtrix->COL;
 	for (int i=s_col; i < WIDTH; i++){
 		int col[10] = {0};
 
 		for(int j = s_row; j < HEIGHT; j++){
-			int cell = data[i][j];
+			int cell = mtrix->matrix[i][j];
 			if(col[cell] != 0){
-				return 0;
+				return (void *)0;
 			}
 			else{
 				col[cell] = 1;
 			}
 		} 
 	}
-	return 1;
+	return (void *)1;
 }
 
 //check sub matrix
-void checkCols(int data[][]){
+void *checkMatrix(void *value){
+	validate *mtrix = (validate *)value;
+	int s_row = mtrix->ROW;
+	int s_col = mtrix->COL;
 	for (int i=s_row; i < s_row+3; i++){
 		int subm[10] = {0};
 
 		for(int j = s_col; j < s_col+3; j++){
-			int cell = data[i][j];
+			int cell = mtrix->matrix[i][j];
 			if(subm[cell] != 0){
-				return 0;
+				return (void *)0;
 			}
 			else{
 				subm[cell] = 1;
 			}
 		} 
 	}
-	return 1;
+	return (void *)1;
 }
