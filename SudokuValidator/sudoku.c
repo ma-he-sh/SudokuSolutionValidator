@@ -27,7 +27,7 @@ The numbers should go from 1-9
 typedef struct{
 	int ROW;
 	int COL;
-	int (*matrix[WIDTH]);
+	int (*matrix)[WIDTH];
 } validate;
 
 
@@ -126,7 +126,49 @@ int main(){
 	pthread_t t_row, t_col, 
 			  t_check1, t_check2, t_check_3, 
 			  t_check4, t_check5, t_check_6,
-			  t_check7, t_chech8, t_check_9;
-
+			  t_check7, t_check8, t_check_9;
 	
+	//Result pointers
+	void *res_rows, *res_cols,
+			  *res_m1, *res_m2, *res_m3, *res_m4,
+			  *res_m5, *res_m6, *res_m7, *res_m8,
+			  *res_m9;
+
+	//Start the threads
+	pthread_create(&t_row, NULL, validate_row, (void *)check0);
+	pthread_create(&t_col, NULL, validate_col, (void *)check0);
+	pthread_create(&t_check1, NULL, validate_matrix, (void *)check1);
+	pthread_create(&t_check2, NULL, validate_matrix, (void *)check2);
+	pthread_create(&t_check3, NULL, validate_matrix, (void *)check3);
+	pthread_create(&t_check4, NULL, validate_matrix, (void *)check4);
+	pthread_create(&t_check5, NULL, validate_matrix, (void *)check5);
+	pthread_create(&t_check6, NULL, validate_matrix, (void *)check6);
+	pthread_create(&t_check7, NULL, validate_matrix, (void *)check7);
+	pthread_create(&t_check8, NULL, validate_matrix, (void *)check8);
+	pthread_create(&t_check9, NULL, validate_matrix, (void *)check9);
+	
+	//Wait for the threads
+	pthread_join(t_row, &val_rows);
+	pthread_join(t_col, &val_cols);
+	pthread_join(t_check1, &val_m1);
+	pthread_join(t_check2, &val_m2);
+	pthread_join(t_check3, &val_m3);
+	pthread_join(t_check4, &val_m4);
+	pthread_join(t_check5, &val_m5);
+	pthread_join(t_check6, &val_m6);
+	pthread_join(t_check7, &val_m7);
+	pthread_join(t_check8, &val_m8);
+	pthread_join(t_check9, &val_m9);
+
+	//Check all the threads passed
+	printf("Validation finished.\n")
+	if((int)res_rows == 1 && (int)res_cols == 1 &&
+		(int)res_m1 == 1 && (int)res_m2 == 1 && (int)res_m3 == 1 &&
+		(int)res_m4 == 1 && (int)res_m5 == 1 && (int)res_m6 == 1 &&
+		(int)res_m7 == 1 && (int)res_m8 == 1 && (int)res_m9 == 1){
+		printf("The puzzle is solved.")
+	}
+	else {
+		printf("The puzzle is not solved.")
+	}
 }
