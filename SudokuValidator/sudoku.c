@@ -1,9 +1,13 @@
-
 /*
-Idea of sudoku:
-No column or row can have repeating numbers 
-The numbers should go from 1-9
-*/
+ * Sudoku Solver Project for SOFE 3950U / CSCI 3020U: Operating Systems
+ *
+ * Copyright (C) 2017, Travis Madill              100547276 
+ *                     Varun Gopikrishna          100553999
+ *                     Mahesh Ranaweera           100555353
+ * All rights reserved.
+ * 
+ */
+
 
 #include <stdio.h>
 #include <stdlib.h>
