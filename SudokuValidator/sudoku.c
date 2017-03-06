@@ -30,6 +30,18 @@ typedef struct{
 	int (*matrix)[WIDTH];
 } validate;
 
+void *checkRows(void *validate){
+	return (void*)5;
+}
+
+void *checkCols(void *validate){
+	return (void*)1;
+}
+
+void *checkMatrix(void *validate){
+	return (void*)1;
+}
+
 
 //open the file 
 int main(){
@@ -54,7 +66,7 @@ int main(){
 	fclose(fp);
 
 	//display sudoku matrix
-	printf("CURRENTLY SOLVING --");
+	printf("CURRENTLY SOLVING --\n");
 	//print the sudoku matix
 	for (int i=0; i<HEIGHT; i++){
 		for(int j=0; j<WIDTH; j++){
@@ -124,9 +136,9 @@ int main(){
 	check9->matrix = matrix;
 
 	pthread_t t_row, t_col, 
-			  t_check1, t_check2, t_check_3, 
-			  t_check4, t_check5, t_check_6,
-			  t_check7, t_check8, t_check_9;
+			  t_check1, t_check2, t_check3, 
+			  t_check4, t_check5, t_check6,
+			  t_check7, t_check8, t_check9;
 	
 	//Result pointers
 	void *res_rows, *res_cols,
@@ -135,40 +147,40 @@ int main(){
 			  *res_m9;
 
 	//Start the threads
-	pthread_create(&t_row, NULL, validate_row, (void *)check0);
-	pthread_create(&t_col, NULL, validate_col, (void *)check0);
-	pthread_create(&t_check1, NULL, validate_matrix, (void *)check1);
-	pthread_create(&t_check2, NULL, validate_matrix, (void *)check2);
-	pthread_create(&t_check3, NULL, validate_matrix, (void *)check3);
-	pthread_create(&t_check4, NULL, validate_matrix, (void *)check4);
-	pthread_create(&t_check5, NULL, validate_matrix, (void *)check5);
-	pthread_create(&t_check6, NULL, validate_matrix, (void *)check6);
-	pthread_create(&t_check7, NULL, validate_matrix, (void *)check7);
-	pthread_create(&t_check8, NULL, validate_matrix, (void *)check8);
-	pthread_create(&t_check9, NULL, validate_matrix, (void *)check9);
+	pthread_create(&t_row, NULL, checkRows, (void *)check0);
+	pthread_create(&t_col, NULL, checkCols, (void *)check0);
+	pthread_create(&t_check1, NULL, checkMatrix, (void *)check1);
+	pthread_create(&t_check2, NULL, checkMatrix, (void *)check2);
+	pthread_create(&t_check3, NULL, checkMatrix, (void *)check3);
+	pthread_create(&t_check4, NULL, checkMatrix, (void *)check4);
+	pthread_create(&t_check5, NULL, checkMatrix, (void *)check5);
+	pthread_create(&t_check6, NULL, checkMatrix, (void *)check6);
+	pthread_create(&t_check7, NULL, checkMatrix, (void *)check7);
+	pthread_create(&t_check8, NULL, checkMatrix, (void *)check8);
+	pthread_create(&t_check9, NULL, checkMatrix, (void *)check9);
 	
 	//Wait for the threads
-	pthread_join(t_row, &val_rows);
-	pthread_join(t_col, &val_cols);
-	pthread_join(t_check1, &val_m1);
-	pthread_join(t_check2, &val_m2);
-	pthread_join(t_check3, &val_m3);
-	pthread_join(t_check4, &val_m4);
-	pthread_join(t_check5, &val_m5);
-	pthread_join(t_check6, &val_m6);
-	pthread_join(t_check7, &val_m7);
-	pthread_join(t_check8, &val_m8);
-	pthread_join(t_check9, &val_m9);
+	pthread_join(t_row, &res_rows);
+	pthread_join(t_col, &res_cols);
+	pthread_join(t_check1, &res_m1);
+	pthread_join(t_check2, &res_m2);
+	pthread_join(t_check3, &res_m3);
+	pthread_join(t_check4, &res_m4);
+	pthread_join(t_check5, &res_m5);
+	pthread_join(t_check6, &res_m6);
+	pthread_join(t_check7, &res_m7);
+	pthread_join(t_check8, &res_m8);
+	pthread_join(t_check9, &res_m9);
 
 	//Check all the threads passed
-	printf("Validation finished.\n")
+	printf("Validation finished.\n");
 	if((int)res_rows == 1 && (int)res_cols == 1 &&
 		(int)res_m1 == 1 && (int)res_m2 == 1 && (int)res_m3 == 1 &&
 		(int)res_m4 == 1 && (int)res_m5 == 1 && (int)res_m6 == 1 &&
 		(int)res_m7 == 1 && (int)res_m8 == 1 && (int)res_m9 == 1){
-		printf("The puzzle is solved.")
+		printf("The puzzle is solved.\n");
 	}
 	else {
-		printf("The puzzle is not solved.")
+		printf("The puzzle is not solved.\n");
 	}
 }
